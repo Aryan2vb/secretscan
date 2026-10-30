@@ -110,3 +110,9 @@ def test_pre_commit_hook_blocks_a_secret(repo, monkeypatch):
 def test_mask():
     assert mask("ghp_abcdefghijklmnopf9") == "ghp_…f9"
     assert mask("short") == "sh…"
+
+
+def test_history_outside_a_git_repo_is_an_error_not_a_clean_result(tmp_path, capsys):
+    # Exit 0 here would tell CI "no secrets" when nothing was scanned.
+    assert main(["history", str(tmp_path)]) == 2
+    assert "not a git repository" in capsys.readouterr().err
