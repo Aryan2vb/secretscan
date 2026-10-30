@@ -40,6 +40,25 @@ Found 1 secret. Revoke them: removing a secret from code doesn't un-leak it.
 - **History mode** reports each secret once, at the commit that first added it.
 - **False positives:** list paths in `.secretscanignore` (glob patterns, like `.gitignore`), or add `# secretscan:ignore` to the line.
 
+## Try it in two minutes
+
+```sh
+mkdir /tmp/demo && cd /tmp/demo && git init
+secretscan install-hook
+
+# A fake AWS key: the docs example with the last letter changed
+echo 'AWS_KEY="AKIAIOSFODNN7EXAMPLF"' > config.py   # secretscan:ignore
+git add config.py && git commit -m "add config"    # → blocked by the hook
+
+git commit -m "add config" --no-verify             # force it in anyway
+echo 'AWS_KEY = ""' > config.py && git commit -am "remove key"
+
+secretscan scan .      # → No secrets found (the file is clean now)
+secretscan history .   # → still finds it, with the commit and author that added it
+```
+
+The last two lines are the whole point: deleting a key doesn't remove it from git, so the fix is to revoke it.
+
 ## How it works
 
 1. **Files:** walk the directory, skip `.git`, `node_modules`, binary files and files over 1 MB, and check every line against the rules.
