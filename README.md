@@ -14,8 +14,10 @@ Deleting a secret from a file doesn't remove it from git. Every old commit still
 ## Install
 
 ```sh
-pip install -e .
+pip install secretscan-cli
 ```
+
+The command is `secretscan`. From source: `pip install -e .`
 
 ## Usage
 

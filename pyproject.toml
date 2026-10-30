@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "secretscan"
+name = "secretscan-cli"
 version = "0.1.0"
 description = "Find leaked secrets in files and git history"
 readme = "README.md"
